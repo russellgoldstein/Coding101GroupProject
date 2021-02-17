@@ -105,6 +105,7 @@ def doOut():
     print(lineup[currentBatter] + " got an out")
     outs += 1
     if outs == 3:
+        print("-----------------Bottom of", inning, "-----------------------")
         thirdBase = ""
         secondBase = ""
         firstBase = ""
@@ -140,6 +141,8 @@ def opponentScoring():
         thisInningRuns = random.randint(1, 5)
         opponentScore = opponentScore + thisInningRuns
     print("The opponent scored", thisInningRuns, "runs ")
+    print("score is us:", ourScore, "them:", opponentScore)
+    print("----------------------------------------------------")
 
 
 
