@@ -1,157 +1,40 @@
-import random
+from Player import Player
+from Mets import Mets
+from Game import Game
 
-lineup = ["Nimmo", "McNeil", "Lindor", "Conforto", "Alonso", "Smith", "Davis", "McCann", "deGrom"]
-hitChance = [.260, .305, .315, .333, .240, .283, .270, .275, .188]
-inning = 1
-outs = 0
-firstBase = ""
-secondBase = ""
-thirdBase = ""
-ourScore = 0
-opponentScore = 0
-currentBatter = 0
-totalInnings = 9
-print(lineup)
-
-#### Print Info ####
+ourTeam = Mets()
+game = Game(ourTeam)
+print(ourTeam.lineup)
+print(game.ourTeam.name, "- inning", game.inning, "of", game.totalInnings)
 
 def printInfo():
     #Because no variables are being re/assigned a value in this function, the Python interpretor assumes global by default
     print("----------------------------------------------------------")
-    if firstBase != "":
-        print(firstBase, "is on first")
+    if game.firstBase != "":
+        print(game.firstBase, "is on first")
     else:
         print("There is no one on first")
-    if secondBase != "":
-        print(secondBase, "is on second")
+    if game.secondBase != "":
+        print(game.secondBase, "is on second")
     else:
         print("There is no one on second")
-    if thirdBase != "":
-        print(thirdBase, "is on third")
+    if game.thirdBase != "":
+        print(game.thirdBase, "is on third")
     else:
         print("There is no one on third")
-    print("Our score is: " + str(ourScore) +" and the opponent's score is "+ str(opponentScore))
-    print("There are", outs, "outs")
-    print("The current batter is", lineup[currentBatter], "and his batting average is", hitChance[currentBatter])
-    print("It is currently the", inning, "inning")
-
-#### End Print Info ####
-
-def doSingle():
-    global thirdBase, secondBase, firstBase, ourScore
-    print(lineup[currentBatter] + " got a single")
-    if thirdBase != "":
-        ourScore += 1 # same as score = score + 1
-        print(thirdBase + " scored!")
-        thirdBase = ""
-    if secondBase != "":
-        thirdBase = secondBase
-        secondBase = ""
-    if firstBase != "":
-        secondBase = firstBase
-    firstBase = lineup[currentBatter]
-
-def doDouble():
-    global thirdBase, secondBase, firstBase, ourScore
-    print(lineup[currentBatter] + " got a double")
-    if thirdBase != "":
-        ourScore += 1
-        print(thirdBase + " scored!")
-        thirdBase = ""
-    if secondBase != "":
-        ourScore += 1
-        print(secondBase + " scored!")
-    if firstBase != "":
-        thirdBase = firstBase
-        firstBase = ""
-    secondBase = lineup[currentBatter]
-
-def doTriple():
-    global thirdBase, secondBase, firstBase, ourScore
-    print(lineup[currentBatter] + " got a triple")
-    if thirdBase != "":
-        ourScore += 1
-        print(thirdBase + " scored!")
-        thirdBase = ""
-    if secondBase != "":
-        ourScore +=1
-        print(secondBase + " scored!")
-        secondBase = ""
-    if firstBase != "":
-        ourScore +=1
-        print(firstBase + " scored!")
-        firstBase = ""
-    thirdBase = lineup[currentBatter]
-
-def doHomeRun():
-    global thirdBase, secondBase, firstBase, ourScore
-    print(lineup[currentBatter] + " got a home run")
-    if thirdBase != "":
-        ourScore += 1
-        print(thirdBase + " scored!")
-        thirdBase = ""
-    if secondBase != "":
-        ourScore += 1
-        print(secondBase + " scored!")
-        secondBase = ""
-    if firstBase != "":
-        ourScore += 1
-        print(firstBase + " scored!")
-        firstBase = ""
-    ourScore +=1
-
-def doOut():
-    global outs, thirdBase, secondBase, firstBase, inning
-    print(lineup[currentBatter] + " got an out")
-    outs += 1
-    if outs == 3:
-        print("-----------------Bottom of", inning, "-----------------------")
-        thirdBase = ""
-        secondBase = ""
-        firstBase = ""
-        inning += 1
-        outs = 0
-        opponentScoring()
-
-def whatHit():
-    if (hitChance[currentBatter] * 1000) >= random.randint(0, 1001):
-        whichHit = random.randint(0, 20)
-        if whichHit > 6:
-            doSingle()
-        elif whichHit > 3:
-            doDouble()
-        elif whichHit > 1:
-            doTriple()
-        else:
-            doHomeRun()
-    else:
-        doOut()
-
-def atBat():
-    global currentBatter
-    whatHit()
-    currentBatter += 1
-    if currentBatter > 8:
-        currentBatter = 0
-
-def opponentScoring():
-    global opponentScore
-    thisInningRuns = 0
-    if random.randint(0, 3) == 0:
-        thisInningRuns = random.randint(1, 5)
-        opponentScore = opponentScore + thisInningRuns
-    print("The opponent scored", thisInningRuns, "runs ")
-    print("score is us:", ourScore, "them:", opponentScore)
-    print("----------------------------------------------------")
+    print("Our score is: " + str(ourTeam.score) +" and the opponent's score is "+ str(game.opponentScore))
+    print("There are", game.outs, "outs")
+    print("The current batter is", ourTeam.getCurrentBatterName(), "and his batting average is", ourTeam.getCurrentBatterHitChance())
+    print("It is currently the", game.inning, "inning")
 
 
+while game.inning <= game.totalInnings or game.opponentScore == ourTeam.score:
+    game.atBat()
+    #printInfo()
 
-
-while inning <= totalInnings or opponentScore == ourScore:
-    atBat()
-
-if ourScore > opponentScore:
-    print("Our team won "+str(ourScore)+" to "+str(opponentScore))
+if ourTeam.score > game.opponentScore:
+    print("Our team won "+str(ourTeam.score)+" to "+str(game.opponentScore))
 else:
-    print("Our team lost "+str(ourScore)+" to "+str(opponentScore))
+    print("Our team lost "+str(ourTeam.score)+" to "+str(game.opponentScore))
+
 
